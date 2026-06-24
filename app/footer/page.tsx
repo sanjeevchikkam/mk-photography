@@ -1,6 +1,12 @@
-import { Mail, Phone, MessageSquare, Globe, BadgeInfo, Video, Sparkles } from 'lucide-react';
+"use client";
 
-export default function FooterSection() {
+import { Mail, Phone, MessageSquare, Inspect, Globe, Video, Sparkles } from 'lucide-react';
+
+interface FooterSectionProps {
+  onGetQuote?: () => void;
+}
+
+export default function FooterSection({ onGetQuote }: FooterSectionProps) {
   const quickLinks = [
     { name: 'Home', href: '#home' },
     { name: 'Services', href: '#services' },
@@ -55,7 +61,7 @@ export default function FooterSection() {
               aria-label="Instagram Profile"
               id="footer-social-instagram"
             >
-              <Globe className="w-4 h-4" />
+              <Inspect className="w-4 h-4" />
             </a>
             <a
               href="https://facebook.com"
@@ -65,7 +71,7 @@ export default function FooterSection() {
               aria-label="Facebook Profile"
               id="footer-social-facebook"
             >
-              <BadgeInfo className="w-4 h-4" />
+              <Globe className="w-4 h-4" />
             </a>
             <a
               href="https://youtube.com"
@@ -120,18 +126,23 @@ export default function FooterSection() {
             </a>
 
             {/* WhatsApp option */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 text-sm text-[#E5E5E5]/70 hover:text-[#D4AF37] transition-colors duration-300 group"
+            <button
+              onClick={(e) => {
+                if (onGetQuote) {
+                  e.preventDefault();
+                  onGetQuote();
+                } else {
+                  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                }
+              }}
+              className="flex items-center gap-3 text-sm text-[#E5E5E5]/70 hover:text-[#D4AF37] transition-colors duration-300 group cursor-pointer text-left w-full bg-transparent border-none p-0 focus:outline-none"
               id="footer-whatsapp-link"
             >
               <span className="w-8 h-8 rounded-sm bg-white/5 flex items-center justify-center group-hover:bg-[#D4AF37]/10 group-hover:border-[#D4AF37]/30 border border-transparent transition-all duration-300">
                 <MessageSquare className="w-3.5 h-3.5 text-[#D4AF37]" />
               </span>
               Connect on WhatsApp
-            </a>
+            </button>
 
             {/* Email Option */}
             <a

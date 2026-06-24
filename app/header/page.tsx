@@ -1,10 +1,13 @@
 "use client";
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, Sparkles } from 'lucide-react';
 
-export default function HeaderSection() {
+interface HeaderSectionProps {
+  onGetQuote?: () => void;
+}
+
+export default function HeaderSection({ onGetQuote }: HeaderSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -77,16 +80,21 @@ export default function HeaderSection() {
 
         {/* Right Side: Get Quote Button */}
         <div className="hidden lg:block" id="header-cta-desktop">
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0B0B0B] text-xs font-semibold uppercase tracking-widest transition-all duration-300 rounded-sm hover:shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+          <button
+            onClick={(e) => {
+              if (onGetQuote) {
+                e.preventDefault();
+                onGetQuote();
+              } else {
+                window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+              }
+            }}
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0B0B0B] text-xs font-semibold uppercase tracking-widest transition-all duration-300 rounded-sm hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] cursor-pointer"
             id="get-quote-btn-desktop"
           >
             <Sparkles className="w-3.5 h-3.5" />
             Get Quote
-          </a>
+          </button>
         </div>
 
         {/* Mobile Hamburger Toggle */}
@@ -125,16 +133,21 @@ export default function HeaderSection() {
                   </a>
                 ))}
               </div>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsOpen(false)}
-                className="w-full text-center block px-6 py-3 bg-[#D4AF37] text-[#0B0B0B] text-sm font-bold uppercase tracking-widest transition-colors duration-300 hover:bg-[#bfa032] rounded-sm shadow-[0_4px_20px_rgba(212,175,55,0.2)]"
+              <button
+                onClick={(e) => {
+                  setIsOpen(false);
+                  if (onGetQuote) {
+                    e.preventDefault();
+                    onGetQuote();
+                  } else {
+                    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+                className="w-full text-center block px-6 py-3 bg-[#D4AF37] text-[#0B0B0B] text-sm font-bold uppercase tracking-widest transition-colors duration-300 hover:bg-[#bfa032] rounded-sm shadow-[0_4px_20px_rgba(212,175,55,0.2)] cursor-pointer"
                 id="get-quote-btn-mobile"
               >
                 Get Quote
-              </a>
+              </button>
             </div>
           </motion.div>
         )}

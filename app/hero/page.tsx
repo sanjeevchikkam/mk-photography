@@ -1,11 +1,14 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, ArrowRight, Camera, ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  onGetQuote?: () => void;
+}
+
+export default function HeroSection({ onGetQuote }: HeroSectionProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const backgroundImages = [
@@ -26,7 +29,7 @@ export default function HeroSection() {
       title: "The Grand Mandap",
       subtitle: "Traditional Indian Festivities",
       tag: "MAJESTIC & TIMELESS"
-    }    
+    }
   ];
 
   // Automatic slideshow
@@ -53,7 +56,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-[75vh] md:min-h-screen w-full bg-[#0B0B0B] overflow-hidden flex flex-col justify-between pt-20 md:pt-28 pb-12 md:pb-8"
+      className="relative h-[60vh] sm:h-[80vh] lg:h-screen min-h-[500px] sm:min-h-[600px] lg:min-h-[750px] w-full bg-[#0B0B0B] overflow-hidden flex flex-col justify-between pt-20 md:pt-28 pb-12 md:pb-8"
     >
       {/* 1. Cinematic Background Layer using MAP to render multiple scrolling/panning photos */}
       <div className="absolute inset-0 z-0 select-none overflow-hidden" id="hero-background-slider">
@@ -74,24 +77,13 @@ export default function HeroSection() {
                   src={slide.url}
                   alt={slide.title}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center transform transition-transform duration-10000 ease-linear scale-105"
-                  style={{
-                    animation: 'panBackground 20s infinite alternate ease-in-out'
-                  }}
+                  className="w-full h-full object-cover object-center transform transition-transform duration-10000 ease-linear scale-105 pan-bg-animation"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0B] via-transparent to-[#0B0B0B]/40" />
               </motion.div>
             );
           })}
         </AnimatePresence>
-
-        {/* CSS Animation embedded inline for the gentle pan scroll background effect */}
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes panBackground {
-            0% { transform: scale(1.05) translate(0px, 0px); }
-            100% { transform: scale(1.15) translate(-15px, -10px); }
-          }
-        `}} />
       </div>
 
       {/* 2. Premium Overlays for Contrast & Aesthetic Value */}
@@ -154,16 +146,21 @@ export default function HeroSection() {
               className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
               id="hero-buttons-container"
             >
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-[#D4AF37] hover:bg-[#bfa032] text-[#0B0B0B] text-xs font-bold uppercase tracking-widest transition-all duration-300 rounded-sm shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_12px_30px_rgba(212,175,55,0.4)] group"
+              <button
+                onClick={(e) => {
+                  if (onGetQuote) {
+                    e.preventDefault();
+                    onGetQuote();
+                  } else {
+                    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+                className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-[#D4AF37] hover:bg-[#bfa032] text-[#0B0B0B] text-xs font-bold uppercase tracking-widest transition-all duration-300 rounded-sm shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_12px_30px_rgba(212,175,55,0.4)] group cursor-pointer"
                 id="hero-cta-quote"
               >
                 Get Quote
                 <Sparkles className="w-4 h-4 text-[#0B0B0B] transition-transform duration-300 group-hover:rotate-12" />
-              </a>
+              </button>
               <a
                 href="#services"
                 className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-transparent border border-white/20 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-bold uppercase tracking-widest transition-all duration-300 rounded-sm hover:bg-white/[0.03]"
@@ -242,17 +239,17 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll indicator animation pointing to the next section coming (visible on both laptop & phone) */}
-      <div className="relative z-20 flex flex-col items-center gap-2 mt-4 mb-2 select-none" id="hero-scroll-indicator">
+      <div className="relative z-20 flex flex-col items-center gap-3 mt-6 mb-2 select-none" id="hero-scroll-indicator">
         <motion.div
           animate={{
-            y: [0, 6, 0],
+            y: [0, 8, 0],
           }}
           transition={{
-            duration: 1.5,
+            duration: 2,
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="flex flex-col items-center gap-1 cursor-pointer"
+          className="flex flex-col items-center gap-2 cursor-pointer group"
           onClick={() => {
             const nextSection = document.getElementById('contact');
             if (nextSection) {
@@ -260,10 +257,44 @@ export default function HeroSection() {
             }
           }}
         >
-          <span className="text-[9px] font-mono tracking-[0.3em] text-white/40 uppercase">
+          {/* Mouse scroll body animation */}
+          <div className="w-5 h-8 rounded-full border border-white/20 group-hover:border-[#D4AF37]/80 flex justify-center p-1.5 transition-colors duration-300">
+            <motion.div
+              animate={{
+                y: [0, 10, 0],
+                opacity: [1, 0, 1],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="w-1 h-1.5 bg-[#D4AF37] rounded-full"
+            />
+          </div>
+
+          <span className="text-[9px] font-mono tracking-[0.3em] text-white/40 group-hover:text-[#D4AF37]/90 uppercase transition-colors duration-300">
             Discover More
           </span>
-          <div className="w-[1px] h-8 bg-gradient-to-b from-[#D4AF37] to-transparent" />
+          
+          {/* Animated golden arrow down */}
+          <motion.svg 
+            className="w-4 h-4 text-[#D4AF37]/70 group-hover:text-[#D4AF37] transition-colors duration-300 mt-1" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor" 
+            strokeWidth={2}
+            animate={{
+              opacity: [0.4, 1, 0.4],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 13l-7 7-7-7m14-6l-7 7-7-7" />
+          </motion.svg>
         </motion.div>
       </div>
 
