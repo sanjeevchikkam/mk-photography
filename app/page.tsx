@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import HeaderSection from './header/page.tsx';
-import HeroSection from './hero/page.tsx';
-import FooterSection from './footer/page.tsx';
-import QuoteModal from './quotemodal/page.tsx';
+import HeaderSection from './header/page';
+import HeroSection from './hero/page';
+import FooterSection from './footer/page';
+import QuoteModal from './quotemodal/page';
 
 export default function Page() {
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
