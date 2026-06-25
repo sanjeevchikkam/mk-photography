@@ -1,19 +1,26 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Sparkles, Send, Phone, User, Camera, Check } from 'lucide-react';
 
 interface QuoteModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialService?: string;
 }
 
-export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
+export default function QuoteModal({ isOpen, onClose, initialService }: QuoteModalProps) {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [interestedShoot, setInterestedShoot] = useState('Candid Photography & Videography');
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && initialService) {
+      setInterestedShoot(initialService);
+    }
+  }, [isOpen, initialService]);
 
   const shootOptions = [
     "Candid Photography & Videography",
